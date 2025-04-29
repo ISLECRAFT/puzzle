@@ -2,30 +2,84 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Order Success - EreYvi</title>
-<link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-<style>
-  body { background-color: #fffaec; font-family: sans-serif; color: #4B3222; }
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Order Successful - EreYvi</title>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+  <style>
+    body {
+      background-color: #fffaec;
+      font-family: sans-serif;
+      color: #4B3222;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      text-align: center;
+      padding: 2rem;
+      overflow-x: hidden;
+    }
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 0.5rem;
+    }
+    #orderId {
+      font-weight: bold;
+      font-family: monospace;
+      margin: 0.5rem 0;
+      font-size: 1.25rem;
+    }
+    button.copy {
+      background: #4B3222;
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      margin-top: 1rem;
+    }
+    button.copy:hover {
+      opacity: 0.9;
+    }
+    canvas {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: -1;
+    }
+  </style>
 </head>
-<body class="flex flex-col items-center justify-center min-h-screen text-center space-y-6">
-<h1 class="text-4xl font-bold">🎉 Thank you for your Order!</h1>
-<p>Your Order ID: <span id="orderId" class="font-mono text-lg"></span></p>
-<button onclick="copyOrderId()" class="bg-[#4B3222] text-white px-4 py-2 rounded hover:opacity-90">Copy Order ID</button>
+<body>
+  <canvas id="confetti-canvas"></canvas>
 
-<canvas id="confettiCanvas" style="position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;"></canvas>
+  <h1>🎉 Order Successful!</h1>
+  <p>Thank you for your puzzle order. We’ve received your details and payment.</p>
+  <p>Your Order ID:</p>
+  <div id="orderId">ORD-XXXXXX</div>
+  <button class="copy" onclick="copyOrderId()">Copy Order ID</button>
 
-<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
-<script>
-document.getElementById('orderId').textContent = 'ORD' + Math.floor(Math.random() * 1000000);
-function copyOrderId() {
-  const id = document.getElementById('orderId').textContent;
-  navigator.clipboard.writeText(id);
-  alert("Copied: " + id);
-}
-confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
-</script>
+  <script>
+    // Generate and show Order ID
+    const randomId = 'ORD-' + Math.floor(Math.random() * 900000 + 100000);
+    const orderIdElem = document.getElementById('orderId');
+    orderIdElem.textContent = randomId;
+
+    function copyOrderId() {
+      navigator.clipboard.writeText(orderIdElem.textContent).then(() => {
+        alert("Order ID copied to clipboard!");
+      });
+    }
+
+    // Confetti burst
+    const fireConfetti = () => {
+      confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+    };
+    fireConfetti();
+    setTimeout(fireConfetti, 400);
+    setTimeout(fireConfetti, 800);
+  </script>
 </body>
 </html>
