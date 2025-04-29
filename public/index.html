@@ -2,130 +2,137 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>EreYvi Puzzle Order</title>
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Puzzle Order - 7 Steps</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif&display=swap" rel="stylesheet">
   <style>
-    body { background-color: #fffaec; color: #4B3222; font-family: sans-serif; }
-    .hidden { display: none; }
-    .highlight { border: 2px solid #4B3222; }
-    .fade-in { animation: fadeIn 1s ease-in; }
-    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-    .palm-background {
-      background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/e/e7/Leaf_shadow.jpg/1200px-Leaf_shadow.jpg');
+    body {
+      background-color: #fffaec;
+      background-image: url('https://cdn.pixabay.com/photo/2021/09/06/12/44/palm-leaf-6602484_960_720.png');
       background-repeat: no-repeat;
       background-position: top right;
-      background-size: 30%;
-      opacity: 0.08;
-      position: fixed;
-      top: 0;
-      right: 0;
-      width: 100%;
-      height: 100%;
-      z-index: -1;
+      background-size: 300px;
+      background-attachment: fixed;
+      font-family: 'Noto Serif', serif;
+      color: #4B3222;
+      min-height: 100vh;
+      opacity: 0;
+      animation: fadeInBody 2s ease-in-out forwards;
     }
+    @keyframes fadeInBody { to { opacity: 1; } }
+    @keyframes pop { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
+    .pop { animation: pop 0.3s ease; }
+    .parallax { background-attachment: fixed; background-position: center top; background-size: cover; }
+    .hidden { display: none; }
   </style>
 </head>
-<body class="relative">
-<div class="palm-background"></div>
-
-<div class="max-w-2xl mx-auto p-6 space-y-6 fade-in">
-  <h1 class="text-3xl font-bold text-center">Create Your Puzzle Order</h1>
-  <form id="orderForm" class="space-y-8">
-
-    <!-- Step 1 -->
-    <div>
-      <h2 class="text-xl font-semibold mb-2">Step 1: Choose a Product</h2>
-      <div id="products" class="space-y-2">
-        <div onclick="selectProduct('A4 Frame Set', 540)" class="border p-4 cursor-pointer" id="A4">📐 A4 Frame Set (MVR 540 / USD 35)</div>
-        <div onclick="selectProduct('Round Frame Set', 520)" class="border p-4 cursor-pointer" id="Round">⭕ Round Frame Set (MVR 520 / USD 33.8)</div>
-        <div onclick="selectProduct('A3 Puzzle Set', 350)" class="border p-4 cursor-pointer" id="A3">🧩 A3 Puzzle Set (MVR 350 / USD 22.7)</div>
+<body class="flex flex-col items-center justify-center p-6 parallax">
+  <img src="https://www.dropbox.com/scl/fi/8rvf0md64luh051y4z6ns/ereyvi-logo-01.png?rlkey=egyksoef6uc7dwqzvprw399mt&st=azw9588l&raw=1" alt="Ereyvi Logo" class="mb-8 w-40 animate-fadeIn">
+  <div id="form-section" class="w-full max-w-2xl bg-white bg-opacity-90 p-8 rounded-2xl shadow-md animate-fadeInUp">
+    <h1 class="text-3xl font-bold text-center mb-6">Create Your Own Puzzle Set!</h1>
+    <form id="order-form" enctype="multipart/form-data" class="space-y-8">
+      <div class="mb-6 animate-fadeInUp" id="step1">
+        <h2 class="text-xl font-semibold mb-4">Step 1: Choose a Product</h2>
+        <div id="product-options" class="grid gap-4">
+          <div onclick="selectProduct('A4 Frame Set', 540, 35)" id="option-A4" class="p-4 border rounded-lg cursor-pointer hover:bg-[#EFE7DD] transition-all transform hover:scale-105 hover:shadow-lg hover:ring-2 hover:ring-[#4B3222]">
+            <p class="font-bold">A4 Frame Set</p><p>MVR 540 / USD 35</p>
+          </div>
+          <div onclick="selectProduct('Round Frame Set', 520, 33.8)" id="option-Round" class="p-4 border rounded-lg cursor-pointer hover:bg-[#EFE7DD] transition-all transform hover:scale-105 hover:shadow-lg hover:ring-2 hover:ring-[#4B3222]">
+            <p class="font-bold">Round Frame Set</p><p>MVR 520 / USD 33.8</p>
+          </div>
+          <div onclick="selectProduct('A3 Puzzle Set', 350, 22.7)" id="option-A3" class="p-4 border rounded-lg cursor-pointer hover:bg-[#EFE7DD] transition-all transform hover:scale-105 hover:shadow-lg hover:ring-2 hover:ring-[#4B3222]">
+            <p class="font-bold">A3 Puzzle Set</p><p>MVR 350 / USD 22.7</p>
+          </div>
+        </div>
       </div>
-    </div>
-
-    <!-- Step 2 -->
-    <div>
-      <h2 class="text-xl font-semibold mb-2">Step 2: Upload Your Image</h2>
-      <input type="file" accept="image/*" id="imageUpload" class="w-full border p-2"/>
-    </div>
-
-    <!-- Step 3 -->
-    <div>
-      <h2 class="text-xl font-semibold mb-2">Step 3: Engraved Message</h2>
-      <input type="text" id="engraving" maxlength="60" class="w-full border p-2" placeholder="(A4 & Round Frame Sets Only)" />
-    </div>
-
-    <!-- Step 4 -->
-    <div>
-      <h2 class="text-xl font-semibold mb-2">Step 4: Personalised Card Message</h2>
-      <textarea maxlength="200" class="w-full border p-2" id="cardMsg" placeholder="Max 200 characters"></textarea>
-    </div>
-
-    <!-- Step 5 -->
-    <div>
-      <h2 class="text-xl font-semibold mb-2">Step 5: Your Details</h2>
-      <input type="text" class="w-full border p-2 mb-2" placeholder="Your Name" required/>
-      <input type="tel" class="w-full border p-2 mb-2" placeholder="Contact Number" required/>
-      <input type="text" class="w-full border p-2 mb-2" placeholder="Delivery Address" required/>
-      <input type="email" class="w-full border p-2 mb-2" placeholder="Email" required/>
-    </div>
-
-    <!-- Step 6 -->
-    <div>
-      <h2 class="text-xl font-semibold mb-2">Step 6: Payment Instructions</h2>
-      <p>MVR: <span id="priceMVR">-</span></p>
-      <p>USD: <span id="priceUSD">-</span></p>
-      <div class="mt-2 space-y-2">
-        <p><strong>ISLECRAFT STUDIO</strong></p>
-        <p>MVR Account: <button type="button" onclick="copyText('7730000722845')" class="text-blue-600 underline">7730000722845</button></p>
-        <p>USD Account: <button type="button" onclick="copyText('7730000729766')" class="text-blue-600 underline">7730000729766</button></p>
-        <input type="file" accept="image/*" class="w-full mt-2 border p-2"/>
+      <input type="hidden" id="selected-product" name="product">
+      <div class="mb-6 animate-fadeInUp" id="step2">
+        <h2 class="text-xl font-semibold mb-4">Step 2: Upload Your Photo</h2>
+        <input type="file" id="photo" name="photo" accept="image/*" required class="w-full transition-all focus:ring-2 focus:ring-[#4B3222]" onchange="previewImage(event, 'photo-preview')">
+        <img id="photo-preview" class="mt-4 rounded-lg hidden max-h-48 mx-auto" alt="Photo Preview"/>
       </div>
-    </div>
+      <div class="mb-6 animate-fadeInUp" id="step3">
+        <h2 class="text-xl font-semibold mb-4">Step 3: Engraved Message</h2>
+        
+<input type="text" id="engraved-message" name="engraved-message" maxlength="60"
+  oninput="updateCharCount('engraved-message', 'engraved-count', 60)"
+  class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-[#4B3222]">
+<p id="engraved-count" class="text-sm text-gray-500 mt-1 text-right">Remaining: 60 characters</p>
+<p id="engraved-note" class="text-xs text-red-500 mt-1 hidden">Engraving is not available for A3 Puzzle Set (no frame).</p>
+<div class="mb-6 animate-fadeInUp" id="step4">
 
-    <!-- Step 7 -->
-    <div class="text-center">
-      <button type="submit" class="bg-[#4B3222] text-white py-2 px-6 rounded-lg hover:opacity-90 transition">Submit Order</button>
-    </div>
+        <h2 class="text-xl font-semibold mb-4">Step 4: Personalized Message for Card</h2>
+        <textarea id="card-message" name="card-message" maxlength="200"
+  oninput="updateCharCount('card-message', 'card-count', 200)"
+  class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-[#4B3222]"></textarea>
+<p id="card-count" class="text-sm text-gray-500 mt-1 text-right">Remaining: 200 characters</p>
+      </div>
+      <div class="mb-6 animate-fadeInUp" id="step5">
+        <h2 class="text-xl font-semibold mb-4">Step 5: Your Details</h2>
+        <input type="text" id="name" name="name" required placeholder="Your Name" class="w-full p-3 border rounded-lg mb-4 focus:ring-2 focus:ring-[#4B3222]">
+        <input type="tel" id="contact" name="contact" required placeholder="Your Contact Number" class="w-full p-3 border rounded-lg mb-4 focus:ring-2 focus:ring-[#4B3222]">
+        <input type="email" id="email" name="email" required placeholder="Your Email Address" class="w-full p-3 border rounded-lg mb-4 focus:ring-2 focus:ring-[#4B3222]">
+        <textarea id="address" name="address" required placeholder="Your Delivery Address" class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-[#4B3222]"></textarea>
+      </div>
+      <div class="mb-6 animate-fadeInUp" id="step6">
+        <h2 class="text-xl font-semibold mb-4">Step 6: Total Amount</h2>
+        <p class="text-lg font-bold">MVR: <span id="mvr-amount">-</span> / USD: <span id="usd-amount">-</span></p>
+      </div>
+      <div class="mb-6 animate-fadeInUp" id="step7">
+        <h2 class="text-xl font-semibold mb-4">Step 7: Payment</h2>
+        <p class="mb-2">Bank Account (ISLECRAFT STUDIO):</p>
+        <div class="flex items-center mb-2">
+          <input id="mvr-account" value="7730000722845" readonly class="border p-2 rounded-l-lg w-full">
+          <button type="button" onclick="copyText('mvr-account')" id="mvr-copy" class="bg-[#4B3222] text-white p-2 rounded-r-lg transition-transform hover:scale-105">Copy</button>
+        </div>
+        <div class="flex items-center mb-4">
+          <input id="usd-account" value="7730000729766" readonly class="border p-2 rounded-l-lg w-full">
+          <button type="button" onclick="copyText('usd-account')" id="usd-copy" class="bg-[#4B3222] text-white p-2 rounded-r-lg transition-transform hover:scale-105">Copy</button>
+        </div>
+        <h3 class="font-semibold mb-2">Upload Payment Slip</h3>
+        <input type="file" id="payment-slip" name="payment-slip" accept="image/*" required class="w-full focus:ring-2 focus:ring-[#4B3222]" onchange="previewImage(event, 'payment-preview')">
+        <img id="payment-preview" class="mt-4 rounded-lg hidden max-h-48 mx-auto" alt="Payment Slip Preview"/>
+      </div>
+      <button id="submit-btn" type="submit" class="w-full bg-[#4B3222] text-white p-3 rounded-full hover:scale-105 hover:bg-[#3a2619] transition-transform flex items-center justify-center">Place Your Order</button>
+    </form>
+  </div>
 
-  </form>
-</div>
-
-<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
 <script>
-let selectedProduct = null;
-
-function selectProduct(name, mvr) {
-  ['A4', 'Round', 'A3'].forEach(id => {
-    document.getElementById(id).classList.remove('highlight');
-  });
-  selectedProduct = name.split(' ')[0];
-  document.getElementById(selectedProduct).classList.add('highlight');
-
-  document.getElementById("priceMVR").innerText = "MVR " + mvr;
-  document.getElementById("priceUSD").innerText = "USD " + (mvr / 15.43).toFixed(2);
-
-  const engraving = document.getElementById("engraving");
-  if (selectedProduct === "A3") {
-    engraving.disabled = true;
-    engraving.placeholder = "Not available for A3 Puzzle Set";
-  } else {
-    engraving.disabled = false;
-    engraving.placeholder = "(A4 & Round Frame Sets Only)";
+function updateCharCount(inputId, countId, maxLength) {
+  const input = document.getElementById(inputId);
+  const count = document.getElementById(countId);
+  if (input && count) {
+    count.textContent = `Remaining: ${maxLength - input.value.length} characters`;
   }
 }
 
-function copyText(text) {
-  navigator.clipboard.writeText(text);
-  alert("Copied: " + text);
-}
+function selectProduct(product, mvr, usd) {
+  document.getElementById('selected-product').value = product;
+  document.getElementById('mvr-amount').textContent = mvr;
+  document.getElementById('usd-amount').textContent = usd;
+  ['option-A4', 'option-Round', 'option-A3'].forEach(id => {
+    document.getElementById(id).classList.remove('border-[#4B3222]', 'ring', 'ring-[#4B3222]');
+  });
+  document.getElementById(`option-${product.split(' ')[0]}`).classList.add('border-[#4B3222]', 'ring', 'ring-[#4B3222]', 'pop');
 
-document.getElementById("orderForm").onsubmit = function(event) {
-  event.preventDefault();
-  confetti({ particleCount: 150, spread: 100 });
-  setTimeout(() => alert("Order Placed Successfully 🎉\nOrder ID: ORD" + Math.floor(Math.random() * 100000)), 300);
-};
+  const engravedField = document.getElementById('engraved-message');
+  const engravedNote = document.getElementById('engraved-note');
+  const engravedCount = document.getElementById('engraved-count');
+
+  if (product === 'A3 Puzzle Set') {
+    engravedField.disabled = true;
+    engravedField.value = '';
+    engravedCount.textContent = 'Engraving not available';
+    engravedNote.classList.remove('hidden');
+  } else {
+    engravedField.disabled = false;
+    engravedCount.textContent = 'Remaining: ' + (60 - engravedField.value.length) + ' characters';
+    engravedNote.classList.add('hidden');
+  }
+}
 </script>
+
 </body>
 </html>
