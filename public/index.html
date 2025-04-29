@@ -5,14 +5,127 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>EreYvi Puzzle Order</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <style>
+    body { background-color: #fffaec; color: #4B3222; font-family: sans-serif; }
+    .hidden { display: none; }
+    .highlight { border: 2px solid #4B3222; }
+    .fade-in { animation: fadeIn 1s ease-in; }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    .palm-background {
+      background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/e/e7/Leaf_shadow.jpg/1200px-Leaf_shadow.jpg');
+      background-repeat: no-repeat;
+      background-position: top right;
+      background-size: 30%;
+      opacity: 0.08;
+      position: fixed;
+      top: 0;
+      right: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+    }
+  </style>
 </head>
-<body>
-  <h1>Step 1: Choose Product</h1>
-  <h2>Step 2: Upload Image</h2>
-  <h2>Step 3: Engraving Message</h2>
-  <h2>Step 4: Reference Card Message</h2>
-  <h2>Step 5: Customer Details</h2>
-  <h2>Step 6: Payment Instructions</h2>
-  <h2>Step 7: Upload Payment Slip</h2>
+<body class="relative">
+<div class="palm-background"></div>
+
+<div class="max-w-2xl mx-auto p-6 space-y-6 fade-in">
+  <h1 class="text-3xl font-bold text-center">Create Your Puzzle Order</h1>
+  <form id="orderForm" class="space-y-8">
+
+    <!-- Step 1 -->
+    <div>
+      <h2 class="text-xl font-semibold mb-2">Step 1: Choose a Product</h2>
+      <div id="products" class="space-y-2">
+        <div onclick="selectProduct('A4 Frame Set', 540)" class="border p-4 cursor-pointer" id="A4">📐 A4 Frame Set (MVR 540 / USD 35)</div>
+        <div onclick="selectProduct('Round Frame Set', 520)" class="border p-4 cursor-pointer" id="Round">⭕ Round Frame Set (MVR 520 / USD 33.8)</div>
+        <div onclick="selectProduct('A3 Puzzle Set', 350)" class="border p-4 cursor-pointer" id="A3">🧩 A3 Puzzle Set (MVR 350 / USD 22.7)</div>
+      </div>
+    </div>
+
+    <!-- Step 2 -->
+    <div>
+      <h2 class="text-xl font-semibold mb-2">Step 2: Upload Your Image</h2>
+      <input type="file" accept="image/*" id="imageUpload" class="w-full border p-2"/>
+    </div>
+
+    <!-- Step 3 -->
+    <div>
+      <h2 class="text-xl font-semibold mb-2">Step 3: Engraved Message</h2>
+      <input type="text" id="engraving" maxlength="60" class="w-full border p-2" placeholder="(A4 & Round Frame Sets Only)" />
+    </div>
+
+    <!-- Step 4 -->
+    <div>
+      <h2 class="text-xl font-semibold mb-2">Step 4: Personalised Card Message</h2>
+      <textarea maxlength="200" class="w-full border p-2" id="cardMsg" placeholder="Max 200 characters"></textarea>
+    </div>
+
+    <!-- Step 5 -->
+    <div>
+      <h2 class="text-xl font-semibold mb-2">Step 5: Your Details</h2>
+      <input type="text" class="w-full border p-2 mb-2" placeholder="Your Name" required/>
+      <input type="tel" class="w-full border p-2 mb-2" placeholder="Contact Number" required/>
+      <input type="text" class="w-full border p-2 mb-2" placeholder="Delivery Address" required/>
+      <input type="email" class="w-full border p-2 mb-2" placeholder="Email" required/>
+    </div>
+
+    <!-- Step 6 -->
+    <div>
+      <h2 class="text-xl font-semibold mb-2">Step 6: Payment Instructions</h2>
+      <p>MVR: <span id="priceMVR">-</span></p>
+      <p>USD: <span id="priceUSD">-</span></p>
+      <div class="mt-2 space-y-2">
+        <p><strong>ISLECRAFT STUDIO</strong></p>
+        <p>MVR Account: <button type="button" onclick="copyText('7730000722845')" class="text-blue-600 underline">7730000722845</button></p>
+        <p>USD Account: <button type="button" onclick="copyText('7730000729766')" class="text-blue-600 underline">7730000729766</button></p>
+        <input type="file" accept="image/*" class="w-full mt-2 border p-2"/>
+      </div>
+    </div>
+
+    <!-- Step 7 -->
+    <div class="text-center">
+      <button type="submit" class="bg-[#4B3222] text-white py-2 px-6 rounded-lg hover:opacity-90 transition">Submit Order</button>
+    </div>
+
+  </form>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+<script>
+let selectedProduct = null;
+
+function selectProduct(name, mvr) {
+  ['A4', 'Round', 'A3'].forEach(id => {
+    document.getElementById(id).classList.remove('highlight');
+  });
+  selectedProduct = name.split(' ')[0];
+  document.getElementById(selectedProduct).classList.add('highlight');
+
+  document.getElementById("priceMVR").innerText = "MVR " + mvr;
+  document.getElementById("priceUSD").innerText = "USD " + (mvr / 15.43).toFixed(2);
+
+  const engraving = document.getElementById("engraving");
+  if (selectedProduct === "A3") {
+    engraving.disabled = true;
+    engraving.placeholder = "Not available for A3 Puzzle Set";
+  } else {
+    engraving.disabled = false;
+    engraving.placeholder = "(A4 & Round Frame Sets Only)";
+  }
+}
+
+function copyText(text) {
+  navigator.clipboard.writeText(text);
+  alert("Copied: " + text);
+}
+
+document.getElementById("orderForm").onsubmit = function(event) {
+  event.preventDefault();
+  confetti({ particleCount: 150, spread: 100 });
+  setTimeout(() => alert("Order Placed Successfully 🎉\nOrder ID: ORD" + Math.floor(Math.random() * 100000)), 300);
+};
+</script>
 </body>
 </html>
