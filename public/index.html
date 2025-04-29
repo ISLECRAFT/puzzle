@@ -1,18 +1,70 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Order Your Puzzle | EreYvi</title>
-<link href="https://cdn.tailwindcss.com" rel="stylesheet">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Create Your Puzzle | EreYvi</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <style>
+    body { background-color: #fffaec; }
+    .selected-ring { box-shadow: 0 0 0 4px rgba(75, 50, 34, 0.5); }
+    @keyframes fade-in-pulse {
+      0% { opacity: 0; transform: scale(0.5); }
+      50% { opacity: 1; transform: scale(1.2); }
+      100% { transform: scale(1); }
+    }
+    .animate-fade-in-pulse { animation: fade-in-pulse 0.6s ease-out forwards; }
+  </style>
 </head>
-<body style="background: #fffaec; font-family: sans-serif; padding: 2rem;">
-  <h1 class="text-3xl font-bold text-[#4B3222] mb-6 text-center">Create Your Puzzle Order</h1>
-  <form class="space-y-6" enctype="multipart/form-data" method="POST" action="/api/submit">
-    <!-- Step 1-7 simplified here; final full content will be written -->
-    <div class="text-center">Start building your personalized set!</div>
-    <div class="text-center"><button class="bg-[#4B3222] text-white px-6 py-2 rounded-lg mt-8 hover:opacity-90 transition">Place Your Order</button></div>
-  </form>
+<body class="font-sans text-[#4B3222]">
+  <div class="max-w-2xl mx-auto py-10">
+    <h1 class="text-3xl font-bold text-center mb-8">Create Your Puzzle Order</h1>
+    <form id="orderForm" class="space-y-8" enctype="multipart/form-data">
+      <!-- Step 1: Product Selection -->
+      <div>
+        <h2 class="text-2xl font-semibold mb-4">Step 1: Choose a Product</h2>
+        <div id="product-options" class="grid gap-4">
+          <div onclick="selectProduct('A4 Frame Set', 540, 35)" id="option-A4" class="p-4 border rounded-lg relative cursor-pointer hover:bg-[#EFE7DD] flex items-center space-x-4 group hover:shadow-lg transition-all duration-300">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-[#4B3222] group-hover:scale-125 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <rect x="5" y="3" width="14" height="18" rx="2" ry="2" stroke-width="2"></rect>
+            </svg>
+            <div>
+              <p class="font-bold">A4 Frame Set</p>
+              <p>MVR 540 / USD 35</p>
+            </div>
+            <div class="checkmark absolute top-2 right-2 hidden animate-fade-in-pulse">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+              </svg>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="text-center">
+        <button type="submit" class="bg-[#4B3222] text-white py-2 px-6 rounded-lg hover:opacity-90 transition">Place Your Order</button>
+      </div>
+    </form>
+  </div>
+  <script>
+    function selectProduct(product, mvr, usd) {
+      ['option-A4', 'option-Round', 'option-A3'].forEach(id => {
+        const option = document.getElementById(id);
+        if (option) {
+          option.classList.remove('selected-ring');
+          const mark = option.querySelector('.checkmark');
+          if (mark) mark.classList.add('hidden');
+        }
+      });
+      const selectedOption = document.getElementById('option-' + product.split(' ')[0]);
+      if (selectedOption) {
+        selectedOption.classList.add('selected-ring');
+        const checkmark = selectedOption.querySelector('.checkmark');
+        if (checkmark) {
+          checkmark.classList.remove('hidden');
+          checkmark.classList.add('animate-fade-in-pulse');
+        }
+      }
+    }
+  </script>
 </body>
 </html>
