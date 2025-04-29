@@ -5,49 +5,99 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Puzzle Order - 7 Steps</title>
-  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.tailwindcss.com">
+document.getElementById('order-form').addEventListener('submit', function(event) {
+  event.preventDefault();
+
+  // Fill modal with values
+  document.getElementById('confirm-product').textContent = document.getElementById('selected-product').value || '—';
+  document.getElementById('confirm-engraved').textContent = document.getElementById('engraved-message').value || '—';
+  document.getElementById('confirm-card').textContent = document.getElementById('card-message').value || '—';
+  document.getElementById('confirm-name').textContent = document.getElementById('name').value || '—';
+  document.getElementById('confirm-contact').textContent = document.getElementById('contact').value || '—';
+  document.getElementById('confirm-email').textContent = document.getElementById('email').value || '—';
+  document.getElementById('confirm-address').textContent = document.getElementById('address').value || '—';
+
+  // Show modal
+  document.getElementById('confirmation-modal').classList.remove('hidden');
+});
+
+function closeModal() {
+  document.getElementById('confirmation-modal').classList.add('hidden');
+}
+
+function submitConfirmed() {
+  document.getElementById('order-form').submit();
+}
+
+</script>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Serif&display=swap" rel="stylesheet">
-  
+  <style>
+    body {
+      width: 100%;
+      min-height: 100vh;
+      background-color: #FFE6BD;
+      background-image: radial-gradient(circle at top right, rgba(121, 68, 154, 0.13), transparent),
+                        radial-gradient(circle at 20% 80%, rgba(41, 196, 255, 0.13), transparent);
+      font-family: 'Noto Serif', serif;
+      color: #4B3222;
+      margin: 0;
+      overflow-x: hidden;
+      overflow-y: auto;
+      position: relative;
+    }
+    canvas {
+      position: fixed;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      z-index: -1;
+    }
+    .content {
+      position: relative;
+      z-index: 10;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 2rem;
+      text-align: center;
+    }
+  </style>
+
 <style>
-  body {
-    width: 100%;
-    min-height: 100vh;
-    background-color: #F5BC54;
-    background-image: radial-gradient(circle at top right, rgba(121, 68, 154, 0.13), transparent),
-                      radial-gradient(circle at 20% 80%, rgba(41, 196, 255, 0.13), transparent);
-    font-family: 'Noto Serif', serif;
-    color: #4B3222;
-    margin: 0;
-    overflow-x: hidden;
-    overflow-y: auto;
+  .copy-feedback {
+    display: inline-block;
+    margin-left: 0.5rem;
+    opacity: 0;
+    transform: scale(0.95);
+    transition: opacity 0.3s ease, transform 0.3s ease;
   }
-  canvas {
-    position: fixed;
-    width: 100%;
-    height: 100%;
-    z-index: -1;
+  .copy-feedback.show {
+    opacity: 1;
+    transform: scale(1);
   }
 </style>
 
 </head>
-<body>
+<body class="flex flex-col items-center justify-center p-6 parallax">
 <canvas></canvas>
-<div class="flex flex-col items-center justify-center min-h-screen p-6">
-<canvas></canvas> 
-  <img src="https://www.dropbox.com/scl/fi/8rvf0md64luh051y4z6ns/ereyvi-logo-01.png?rlkey=egyksoef6uc7dwqzvprw399mt&st=azw9588l&raw=1" alt="Ereyvi Logo" class="mb-8 w-40 animate-fadeIn">
+  <img src="https://www.dropbox.com/scl/fi/8rvf0md64luh051y4z6ns/ereyvi-logo-01.png?rlkey=egyksoef6uc7dwqzvprw399mt&st=azw9588l&raw=1" alt="Ereyvi Logo" class="mb-8 w-40">
   <div id="form-section" class="w-full max-w-2xl bg-white bg-opacity-90 p-8 rounded-2xl shadow-md animate-fadeInUp">
     <h1 class="text-3xl font-bold text-center mb-6">Create Your Own Puzzle Set!</h1>
     <form id="order-form" enctype="multipart/form-data" class="space-y-8">
       <div class="mb-6 animate-fadeInUp" id="step1">
         <h2 class="text-xl font-semibold mb-4">Step 1: Choose a Product</h2>
         <div id="product-options" class="grid gap-4">
-          <div onclick="selectProduct('A4 Frame Set', 540, 35)" id="option-A4" class="p-4 border rounded-lg cursor-pointer hover:bg-[#EFE7DD] transition-all transform hover:scale-105 hover:shadow-lg hover:ring-2 hover:ring-[#4B3222]">
+          <div onclick="selectProduct('A4 Frame Set', 540, 35)" id="option-A4" class="p-4 border rounded-lg cursor-pointer bg-white hover:bg-[#EFE7DD] will-change-transform transition-all transform hover:scale-105 hover:shadow-lg hover:ring-2 hover:ring-[#4B3222]">
             <p class="font-bold">A4 Frame Set</p><p>MVR 540 / USD 35</p>
           </div>
-          <div onclick="selectProduct('Round Frame Set', 520, 33.8)" id="option-Round" class="p-4 border rounded-lg cursor-pointer hover:bg-[#EFE7DD] transition-all transform hover:scale-105 hover:shadow-lg hover:ring-2 hover:ring-[#4B3222]">
+          <div onclick="selectProduct('Round Frame Set', 520, 33.8)" id="option-Round" class="p-4 border rounded-lg cursor-pointer bg-white hover:bg-[#EFE7DD] will-change-transform transition-all transform hover:scale-105 hover:shadow-lg hover:ring-2 hover:ring-[#4B3222]">
             <p class="font-bold">Round Frame Set</p><p>MVR 520 / USD 33.8</p>
           </div>
-          <div onclick="selectProduct('A3 Puzzle Set', 350, 22.7)" id="option-A3" class="p-4 border rounded-lg cursor-pointer hover:bg-[#EFE7DD] transition-all transform hover:scale-105 hover:shadow-lg hover:ring-2 hover:ring-[#4B3222]">
+          <div onclick="selectProduct('A3 Puzzle Set', 350, 22.7)" id="option-A3" class="p-4 border rounded-lg cursor-pointer bg-white hover:bg-[#EFE7DD] will-change-transform transition-all transform hover:scale-105 hover:shadow-lg hover:ring-2 hover:ring-[#4B3222]">
             <p class="font-bold">A3 Puzzle Set</p><p>MVR 350 / USD 22.7</p>
           </div>
         </div>
@@ -88,13 +138,15 @@
       <div class="mb-6 animate-fadeInUp" id="step7">
         <h2 class="text-xl font-semibold mb-4">Step 7: Payment</h2>
         <p class="mb-2">Bank Account (ISLECRAFT STUDIO):</p>
-        <div class="flex items-center mb-2">
+        <div class="flex items-center mb-2 space-x-2">
           <input id="mvr-account" value="7730000722845" readonly class="border p-2 rounded-l-lg w-full">
           <button type="button" onclick="copyText('mvr-account')" id="mvr-copy" class="bg-[#4B3222] text-white p-2 rounded-r-lg transition-transform hover:scale-105">Copy</button>
+<span id="mvr-feedback" class="copy-feedback text-green-600">✔ Copied</span>
         </div>
-        <div class="flex items-center mb-4">
+        <div class="flex items-center mb-4 space-x-2">
           <input id="usd-account" value="7730000729766" readonly class="border p-2 rounded-l-lg w-full">
           <button type="button" onclick="copyText('usd-account')" id="usd-copy" class="bg-[#4B3222] text-white p-2 rounded-r-lg transition-transform hover:scale-105">Copy</button>
+<span id="usd-feedback" class="copy-feedback text-green-600">✔ Copied</span>
         </div>
         <h3 class="font-semibold mb-2">Upload Payment Slip</h3>
         <input type="file" id="payment-slip" name="payment-slip" accept="image/*" required class="w-full focus:ring-2 focus:ring-[#4B3222]" onchange="previewImage(event, 'payment-preview')">
@@ -137,9 +189,216 @@ function selectProduct(product, mvr, usd) {
     engravedNote.classList.add('hidden');
   }
 }
+
+document.getElementById('order-form').addEventListener('submit', function(event) {
+  event.preventDefault();
+
+  // Fill modal with values
+  document.getElementById('confirm-product').textContent = document.getElementById('selected-product').value || '—';
+  document.getElementById('confirm-engraved').textContent = document.getElementById('engraved-message').value || '—';
+  document.getElementById('confirm-card').textContent = document.getElementById('card-message').value || '—';
+  document.getElementById('confirm-name').textContent = document.getElementById('name').value || '—';
+  document.getElementById('confirm-contact').textContent = document.getElementById('contact').value || '—';
+  document.getElementById('confirm-email').textContent = document.getElementById('email').value || '—';
+  document.getElementById('confirm-address').textContent = document.getElementById('address').value || '—';
+
+  // Show modal
+  document.getElementById('confirmation-modal').classList.remove('hidden');
+});
+
+function closeModal() {
+  document.getElementById('confirmation-modal').classList.add('hidden');
+}
+
+function submitConfirmed() {
+  document.getElementById('order-form').submit();
+}
+
 </script>
 
-<script src="star_animation.js"></script>
+<script>
+    const STAR_COUNT = (window.innerWidth + window.innerHeight) / 8,
+      STAR_SIZE = 3,
+      STAR_MIN_SCALE = 0.2,
+      OVERFLOW_THRESHOLD = 50;
+    const canvas = document.querySelector("canvas"),
+      context = canvas.getContext("2d");
+    let scale = 1, width, height;
+    let stars = [];
+    let pointerX, pointerY;
+    let velocity = { x: 0, y: 0, tx: 0, ty: 0, z: 0.0005 };
+    let touchInput = false;
+    generate();
+    resize();
+    step();
+    window.onresize = resize;
+    canvas.onmousemove = onMouseMove;
+    canvas.ontouchmove = onTouchMove;
+    canvas.ontouchend = onMouseLeave;
+    document.onmouseleave = onMouseLeave;
+
+    function generate() {
+      for (let i = 0; i < STAR_COUNT; i++) {
+        stars.push({
+          x: 0,
+          y: 0,
+          z: STAR_MIN_SCALE + Math.random() * (1 - STAR_MIN_SCALE)
+        });
+      }
+    }
+
+    function placeStar(star) {
+      star.x = Math.random() * width;
+      star.y = Math.random() * height;
+    }
+
+    function recycleStar(star) {
+      let direction = "z";
+      let vx = Math.abs(velocity.tx), vy = Math.abs(velocity.ty);
+      if (vx > 1 && vy > 1) {
+        let axis = vx > vy ? (Math.random() < Math.abs(velocity.x) / (vx + vy) ? "h" : "v")
+                           : (Math.random() < Math.abs(velocity.y) / (vx + vy) ? "v" : "h");
+        if (axis === "h") direction = velocity.x > 0 ? "l" : "r";
+        else direction = velocity.y > 0 ? "t" : "b";
+      }
+      star.z = STAR_MIN_SCALE + Math.random() * (1 - STAR_MIN_SCALE);
+      if (direction === "z") {
+        star.z = 0.1;
+        star.x = Math.random() * width;
+        star.y = Math.random() * height;
+      } else if (direction === "l") {
+        star.x = -STAR_SIZE;
+        star.y = height * Math.random();
+      } else if (direction === "r") {
+        star.x = width + STAR_SIZE;
+        star.y = height * Math.random();
+      } else if (direction === "t") {
+        star.x = width * Math.random();
+        star.y = -STAR_SIZE;
+      } else if (direction === "b") {
+        star.x = width * Math.random();
+        star.y = height + STAR_SIZE;
+      }
+    }
+
+    function resize() {
+      scale = window.devicePixelRatio || 1;
+      width = window.innerWidth * scale;
+      height = window.innerHeight * scale;
+      canvas.width = width;
+      canvas.height = height;
+      stars.forEach(placeStar);
+    }
+
+    function step() {
+      context.clearRect(0, 0, width, height);
+      update();
+      render();
+      requestAnimationFrame(step);
+    }
+
+    function update() {
+      velocity.tx *= 0.95;
+      velocity.ty *= 0.95;
+      velocity.x += (velocity.tx - velocity.x) * 0.7;
+      velocity.y += (velocity.ty - velocity.y) * 0.7;
+      stars.forEach(star => {
+        star.x += velocity.x * star.z;
+        star.y += velocity.y * star.z;
+        star.x += (star.x - width / 2) * velocity.z * star.z;
+        star.y += (star.y - height / 2) * velocity.z * star.z;
+        star.z += velocity.z;
+        if (star.x < -OVERFLOW_THRESHOLD || star.x > width + OVERFLOW_THRESHOLD ||
+            star.y < -OVERFLOW_THRESHOLD || star.y > height + OVERFLOW_THRESHOLD) {
+          recycleStar(star);
+        }
+      });
+    }
+
+    function render() {
+      stars.forEach(star => {
+        context.beginPath();
+        context.lineCap = "round";
+        context.lineWidth = STAR_SIZE * star.z * scale;
+        context.strokeStyle = "rgba(139, 69, 19, 0.6)";
+        context.moveTo(star.x, star.y);
+        let tailX = velocity.x * 2, tailY = velocity.y * 2;
+        if (Math.abs(tailX) < 0.1) tailX = 0.5;
+        if (Math.abs(tailY) < 0.1) tailY = 0.5;
+        context.lineTo(star.x + tailX, star.y + tailY);
+        context.stroke();
+      });
+    }
+
+    function movePointer(x, y) {
+      if (typeof pointerX === "number" && typeof pointerY === "number") {
+        let ox = x - pointerX, oy = y - pointerY;
+        velocity.tx = velocity.x + (ox / 8) * scale * (touchInput ? -1 : 1);
+        velocity.ty = velocity.y + (oy / 8) * scale * (touchInput ? -1 : 1);
+      }
+      pointerX = x;
+      pointerY = y;
+    }
+
+    function onMouseMove(event) {
+      touchInput = false;
+      movePointer(event.clientX, event.clientY);
+    }
+    function onTouchMove(event) {
+      touchInput = true;
+      movePointer(event.touches[0].clientX, event.touches[0].clientY, true);
+      event.preventDefault();
+    }
+    function onMouseLeave() {
+      pointerX = null;
+      pointerY = null;
+    }
+  
+document.getElementById('order-form').addEventListener('submit', function(event) {
+  event.preventDefault();
+
+  // Fill modal with values
+  document.getElementById('confirm-product').textContent = document.getElementById('selected-product').value || '—';
+  document.getElementById('confirm-engraved').textContent = document.getElementById('engraved-message').value || '—';
+  document.getElementById('confirm-card').textContent = document.getElementById('card-message').value || '—';
+  document.getElementById('confirm-name').textContent = document.getElementById('name').value || '—';
+  document.getElementById('confirm-contact').textContent = document.getElementById('contact').value || '—';
+  document.getElementById('confirm-email').textContent = document.getElementById('email').value || '—';
+  document.getElementById('confirm-address').textContent = document.getElementById('address').value || '—';
+
+  // Show modal
+  document.getElementById('confirmation-modal').classList.remove('hidden');
+});
+
+function closeModal() {
+  document.getElementById('confirmation-modal').classList.add('hidden');
+}
+
+function submitConfirmed() {
+  document.getElementById('order-form').submit();
+}
+
+</script>
+
+<!-- Confirmation Modal -->
+<div id="confirmation-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50">
+  <div class="bg-white p-6 rounded-xl shadow-xl max-w-md w-full">
+    <h2 class="text-xl font-bold mb-4">Confirm Your Order</h2>
+    <div class="space-y-2 text-sm text-gray-700">
+      <p><strong>Product:</strong> <span id="confirm-product"></span></p>
+      <p><strong>Engraved Message:</strong> <span id="confirm-engraved"></span></p>
+      <p><strong>Card Message:</strong> <span id="confirm-card"></span></p>
+      <p><strong>Name:</strong> <span id="confirm-name"></span></p>
+      <p><strong>Contact:</strong> <span id="confirm-contact"></span></p>
+      <p><strong>Email:</strong> <span id="confirm-email"></span></p>
+      <p><strong>Address:</strong> <span id="confirm-address"></span></p>
+    </div>
+    <div class="mt-4 flex justify-end space-x-2">
+      <button onclick="submitConfirmed()" class="bg-[#4B3222] text-white px-4 py-2 rounded-lg">Confirm</button>
+      <button onclick="closeModal()" class="border px-4 py-2 rounded-lg">Cancel</button>
+    </div>
+  </div>
 </div>
+
 </body>
 </html>
