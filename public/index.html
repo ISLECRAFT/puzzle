@@ -160,6 +160,32 @@ document.getElementById("orderForm").addEventListener("submit", function(e) {
   .catch(() => alert("Error submitting order."));
 });
 </script>
+
+<script>
+document.getElementById("orderForm").addEventListener("submit", function(e) {
+  e.preventDefault();
+  const form = e.target;
+  const formData = new FormData(form);
+  const selectedProduct = document.querySelector(".highlight")?.textContent || "Not selected";
+  formData.append("product", selectedProduct);
+  formData.append("mvrAmount", document.getElementById("priceMVR")?.textContent.replace("MVR ", "") || "");
+  formData.append("usdAmount", document.getElementById("priceUSD")?.textContent.replace("USD ", "") || "");
+
+  fetch("https://ereyvi-backend.onrender.com/submit-order", {
+    method: "POST",
+    body: formData
+  })
+  .then(res => {
+    if (res.ok) {
+      window.location.href = "success.html";
+    } else {
+      alert("Failed to submit order.");
+    }
+  })
+  .catch(() => alert("Network error."));
+});
+</script>
 </body>
+
 
 </html>

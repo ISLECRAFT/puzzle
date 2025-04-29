@@ -62,7 +62,6 @@
   <button class="copy" onclick="copyOrderId()">Copy Order ID</button>
 
   <script>
-    // Generate and show Order ID
     const randomId = 'ORD-' + Math.floor(Math.random() * 900000 + 100000);
     const orderIdElem = document.getElementById('orderId');
     orderIdElem.textContent = randomId;
@@ -73,7 +72,6 @@
       });
     }
 
-    // Confetti burst
     const fireConfetti = () => {
       confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
     };
