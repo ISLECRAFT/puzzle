@@ -4,80 +4,29 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Order Successful - EreYvi</title>
+  <title>Order Confirmed</title>
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
   <style>
     body {
-      background-color: #fffaec;
       font-family: sans-serif;
-      color: #4B3222;
+      background: #fffbe6;
       display: flex;
-      flex-direction: column;
-      align-items: center;
       justify-content: center;
+      align-items: center;
+      flex-direction: column;
       min-height: 100vh;
       text-align: center;
-      padding: 2rem;
-      overflow-x: hidden;
-    }
-    h1 {
-      font-size: 2.5rem;
-      margin-bottom: 0.5rem;
-    }
-    #orderId {
-      font-weight: bold;
-      font-family: monospace;
-      margin: 0.5rem 0;
-      font-size: 1.25rem;
-    }
-    button.copy {
-      background: #4B3222;
-      color: white;
-      border: none;
-      padding: 0.5rem 1rem;
-      border-radius: 8px;
-      cursor: pointer;
-      margin-top: 1rem;
-    }
-    button.copy:hover {
-      opacity: 0.9;
-    }
-    canvas {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%;
-      height: 100%;
-      pointer-events: none;
-      z-index: -1;
+      color: #4B3222;
     }
   </style>
 </head>
 <body>
-  <canvas id="confetti-canvas"></canvas>
-
-  <h1>🎉 Order Successful!</h1>
-  <p>Thank you for your puzzle order. We’ve received your details and payment.</p>
-  <p>Your Order ID:</p>
-  <div id="orderId">ORD-XXXXXX</div>
-  <button class="copy" onclick="copyOrderId()">Copy Order ID</button>
-
+  <h1 style="font-size: 2.5rem;">🎉 Thank you for your order!</h1>
+  <p>Your puzzle order has been received.</p>
   <script>
-    const randomId = 'ORD-' + Math.floor(Math.random() * 900000 + 100000);
-    const orderIdElem = document.getElementById('orderId');
-    orderIdElem.textContent = randomId;
-
-    function copyOrderId() {
-      navigator.clipboard.writeText(orderIdElem.textContent).then(() => {
-        alert("Order ID copied to clipboard!");
-      });
-    }
-
-    const fireConfetti = () => {
-      confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
-    };
-    fireConfetti();
-    setTimeout(fireConfetti, 400);
-    setTimeout(fireConfetti, 800);
+    confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+    setTimeout(() => confetti(), 300);
+    setTimeout(() => confetti(), 600);
   </script>
 </body>
 </html>
