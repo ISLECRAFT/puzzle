@@ -4,36 +4,35 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Create Your Own Puzzle Set!</title>
+  <title>Puzzle Order - 7 Steps</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Serif&display=swap" rel="stylesheet">
-  <style>
-   body {
-	background: linear-gradient(-45deg, #F7F0E1, #FBEED5, #F5BC54, #F7F0E1);
-	background-size: 400% 400%;
-	animation: gradient 15s ease infinite;
-	height: 100vh;
-}
+  
+<style>
+  body {
+    width: 100%;
+    height: 100vh;
+    background-color: #F5BC54;
+    background-image: radial-gradient(circle at top right, rgba(121, 68, 154, 0.13), transparent),
+                      radial-gradient(circle at 20% 80%, rgba(41, 196, 255, 0.13), transparent);
+    font-family: 'Noto Serif', serif;
+    color: #4B3222;
+    margin: 0;
+    overflow: hidden;
+  }
+  canvas {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+  }
+</style>
 
-@keyframes gradient {
-	0% {
-		background-position: 0% 50%;
-	}
-	50% {
-		background-position: 100% 50%;
-	}
-	100% {
-		background-position: 0% 50%;
-	}
-}
-    @keyframes fadeInBody { to { opacity: 1; } }
-    @keyframes pop { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
-    .pop { animation: pop 0.3s ease; }
-    .parallax { background-attachment: fixed; background-position: center top; background-size: cover; }
-    .hidden { display: none; }
-  </style>
 </head>
-<body class="flex flex-col items-center justify-center p-6 parallax">
+<body>
+<canvas></canvas>
+<div class="flex flex-col items-center justify-center min-h-screen p-6">
+<canvas></canvas> 
   <img src="https://www.dropbox.com/scl/fi/8rvf0md64luh051y4z6ns/ereyvi-logo-01.png?rlkey=egyksoef6uc7dwqzvprw399mt&st=azw9588l&raw=1" alt="Ereyvi Logo" class="mb-8 w-40 animate-fadeIn">
   <div id="form-section" class="w-full max-w-2xl bg-white bg-opacity-90 p-8 rounded-2xl shadow-md animate-fadeInUp">
     <h1 class="text-3xl font-bold text-center mb-6">Create Your Own Puzzle Set!</h1>
@@ -139,5 +138,7 @@ function selectProduct(product, mvr, usd) {
 }
 </script>
 
+<script src="star_animation.js"></script>
+</div>
 </body>
 </html>
