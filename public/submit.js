@@ -1,90 +1,84 @@
 
-import { google } from 'googleapis';
-import nodemailer from 'nodemailer';
-import formidable from 'formidable';
-import fs from 'fs';
+const formidable = require("formidable");
+const fs = require("fs");
+const { google } = require("googleapis");
 
-export const config = {
-  api: {
-    bodyParser: false,
-  },
-};
+module.exports = async (req, res) => {
+  if (req.method !== "POST") {
+    return res.status(405).send("Method Not Allowed");
+  }
 
-const auth = new google.auth.GoogleAuth({
-  credentials: JSON.parse(process.env.GOOGLE_SERVICE_ACCOUNT),
-  scopes: ['https://www.googleapis.com/auth/drive'],
-});
+  const form = new formidable.IncomingForm({ multiples: false });
 
-const drive = google.drive({ version: 'v3', auth });
-
-export default async function handler(req, res) {
-  if (req.method !== 'POST') return res.status(405).send('Method not allowed');
-
-  const form = new formidable.IncomingForm({ multiples: true });
   form.parse(req, async (err, fields, files) => {
+    if (err) {
+      console.error("Form parse error:", err);
+      return res.status(500).send("Form error");
+    }
+
     try {
-      if (err) throw err;
+      const {
+        product,
+        engravedMessage,
+        cardMessage,
+        name,
+        phone,
+        email,
+        address,
+        mvrAmount,
+        usdAmount,
+      } = fields;
 
-      const { customerName, contactNumber, emailAddress, deliveryAddress,
-              engravedMessage, cardMessage, product, mvrAmount, usdAmount } = fields;
+      const { photo, slip } = files;
 
-      const folderId = process.env.GOOGLE_DRIVE_FOLDER_ID;
-      const uploadedLinks = [];
+      const serviceAccount = JSON.parse(process.env.GOOGLE_SERVICE_ACCOUNT);
+      const auth = new google.auth.GoogleAuth({
+        credentials: serviceAccount,
+        scopes: ["https://www.googleapis.com/auth/drive.file"],
+      });
+
+      const drive = google.drive({ version: "v3", auth });
 
       const uploadFile = async (file, label) => {
-        const meta = {
-          name: file.originalFilename,
-          parents: [folderId],
-        };
-        const media = {
-          mimeType: file.mimetype,
-          body: fs.createReadStream(file.filepath),
-        };
-        const uploaded = await drive.files.create({ resource: meta, media, fields: 'id' });
-        const fileId = uploaded.data.id;
-        await drive.permissions.create({ fileId, requestBody: { role: 'reader', type: 'anyone' } });
-        const link = `https://drive.google.com/file/d/${fileId}/view`;
-        uploadedLinks.push(`${label}: ${link}`);
+        if (!file) return null;
+        const response = await drive.files.create({
+          requestBody: {
+            name: `${label}_${file.originalFilename}`,
+            parents: [process.env.GDRIVE_FOLDER_ID],
+          },
+          media: {
+            mimeType: file.mimetype,
+            body: fs.createReadStream(file.filepath),
+          },
+        });
+        return `https://drive.google.com/file/d/${response.data.id}`;
       };
 
-      if (files.uploadedFile) await uploadFile(files.uploadedFile, "Photo");
-      if (files.paymentSlip) await uploadFile(files.paymentSlip, "Payment Slip");
+      const photoLink = await uploadFile(photo, "photo");
+      const slipLink = await uploadFile(slip, "slip");
 
-      const mailBody = `
-New puzzle order received:
+      const orderData = {
+        OrderID: "debug",
+        Name: name,
+        Email: email,
+        Phone: phone,
+        Address: address,
+        Product: product,
+        Engraving: engravedMessage,
+        CardMessage: cardMessage,
+        MVR: mvrAmount,
+        USD: usdAmount,
+        PhotoLink: photoLink,
+        SlipLink: slipLink,
+        Time: new Date().toISOString(),
+      };
 
-Name: ${customerName}
-Contact: ${contactNumber}
-Email: ${emailAddress}
-Address: ${deliveryAddress}
-Product: ${product}
-Engraved Message: ${engravedMessage}
-Card Message: ${cardMessage}
-Amount: MVR ${mvrAmount} / USD ${usdAmount}
-
-File Links:
-${uploadedLinks.join("\n")}
-      `.trim();
-
-      const transporter = nodemailer.createTransport({
-        service: 'gmail',
-        auth: {
-          user: process.env.EMAIL_USER,
-          pass: process.env.EMAIL_PASS,
-        },
-      });
-
-      await transporter.sendMail({
-        from: process.env.EMAIL_USER,
-        to: process.env.EMAIL_TO,
-        subject: 'New Puzzle Order - EreYvi',
-        text: mailBody,
-      });
+      console.log("Order received:", orderData);
 
       return res.status(200).json({ success: true });
-    } catch (e) {
-      console.error("Error processing submission:", e);
-      return res.status(500).send('Submission failed.');
+    } catch (error) {
+      console.error("Submit error:", error.message, error.stack);
+      return res.status(500).send("Server error");
     }
   });
-}
+};
