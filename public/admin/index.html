@@ -1,38 +1,51 @@
 
-<!-- inside Step 1: Choose Product -->
-<div class="mb-6 animate-fade-in-up">
-  <h2 class="text-xl font-semibold mb-4">Step 1: Choose a Product</h2>
-  <div id="product-options" class="grid gap-4">
-    (shortened here for space, will replace correctly)
-  </div>
-</div>
-<!-- Styles and scripts -->
-<style>
-.selected-ring {
-  box-shadow: 0 0 0 4px rgba(75, 50, 34, 0.5);
-}
-@keyframes fade-in-pulse {
-  0% { opacity: 0; transform: scale(0.5); }
-  50% { opacity: 1; transform: scale(1.2); }
-  100% { transform: scale(1); }
-}
-.animate-fade-in-pulse {
-  animation: fade-in-pulse 0.6s ease-out forwards;
-}
-</style>
-<script>
-function selectProduct(product, mvr, usd) {
-  document.getElementById('selected-product').value = product;
-  document.getElementById('mvr-amount').textContent = mvr;
-  document.getElementById('usd-amount').textContent = usd;
-  ['option-A4', 'option-Round', 'option-A3'].forEach(id => {
-    document.getElementById(id).classList.remove('selected-ring');
-    document.getElementById(id).querySelector('.checkmark').classList.add('hidden');
-  });
-  const selectedOption = document.getElementById(`option-${product.split(' ')[0]}`);
-  selectedOption.classList.add('selected-ring');
-  const checkmark = selectedOption.querySelector('.checkmark');
-  checkmark.classList.remove('hidden');
-  checkmark.classList.add('animate-fade-in-pulse');
-}
-</script>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Ereyvi Admin Login</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      background: #fffaec;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      color: #4B3222;
+    }
+    input, button {
+      padding: 0.5rem;
+      margin: 0.25rem;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+    button {
+      background: #4B3222;
+      color: white;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <h1>Ereyvi Admin Login</h1>
+  <input type="text" id="username" placeholder="Username" />
+  <input type="password" id="password" placeholder="Password" />
+  <button onclick="login()">Login</button>
+
+  <script>
+    function login() {
+      const user = document.getElementById("username").value;
+      const pass = document.getElementById("password").value;
+      if (user === "admin" && pass === "Mario@12345") {
+        localStorage.setItem("ereyviAdmin", "authenticated");
+        window.location.href = "panel.html";
+      } else {
+        alert("Incorrect credentials.");
+      }
+    }
+  </script>
+</body>
+</html>

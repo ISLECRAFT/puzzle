@@ -1,0 +1,227 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Ereyvi Admin Panel</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      background: #fffaec;
+      padding: 2rem;
+      color: #4B3222;
+    }
+    h1 {
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
+    }
+    .summary {
+      margin-bottom: 1rem;
+      padding: 1rem;
+      background: #f5eedc;
+      border: 1px solid #e4dac2;
+      border-radius: 8px;
+    }
+    input[type="search"] {
+      padding: 0.5rem;
+      margin-bottom: 1rem;
+      width: 100%;
+      max-width: 400px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+    }
+    th, td {
+      border: 1px solid #d6ccc2;
+      padding: 0.5rem;
+      text-align: left;
+      vertical-align: top;
+    }
+    th {
+      background: #e9e4d8;
+    }
+    .status-btn {
+      padding: 0.25rem 0.5rem;
+      border: none;
+      cursor: pointer;
+      border-radius: 4px;
+      color: white;
+    }
+    .pending {
+      background-color: #d97706;
+    }
+    .completed {
+      background-color: #16a34a;
+    }
+    .copy-btn {
+      background: #4B3222;
+      color: white;
+      border: none;
+      padding: 0.25rem 0.5rem;
+      cursor: pointer;
+      border-radius: 5px;
+      margin-right: 4px;
+    }
+    .delete-btn {
+      background: #b91c1c;
+      color: white;
+      border: none;
+      padding: 0.25rem 0.5rem;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+  </style>
+</head>
+<body>
+  <script>
+    if (localStorage.getItem("ereyviAdmin") !== "authenticated") {
+      window.location.href = "index.html";
+    }
+  </script>
+
+  <h1>📋 Ereyvi Admin Panel</h1>
+
+  <div class="summary">
+    <p><strong>Month:</strong> <span id="monthName"></span></p>
+    <p><strong>Total Orders:</strong> <span id="totalOrders">0</span></p>
+    <p><strong>Total Revenue (MVR):</strong> MVR <span id="totalMVR">0</span></p>
+    <p><strong>Pending Orders:</strong> <span id="pendingCount">0</span></p>
+  </div>
+
+  <input type="search" id="searchInput" placeholder="Search by name, order ID, phone, or email..." />
+
+  <table>
+    <thead>
+      <tr>
+        <th>Order ID</th>
+        <th>Date & Time</th>
+        <th>Name</th>
+        <th>Contact</th>
+        <th>Product</th>
+        <th>Amount (MVR)</th>
+        <th>Status</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody id="orderTable">
+    </tbody>
+  </table>
+
+  <script>
+    const orders = [
+      {
+        id: "ORD-1001",
+        date: "2025-04-30 14:55",
+        name: "Insha Abbas",
+        phone: "+9607870000",
+        email: "insha@example.com",
+        address: "Majeedhee Magu, Male'",
+        product: "A4 Frame Set",
+        amount: 540,
+        status: "pending"
+      },
+      {
+        id: "ORD-1002",
+        date: "2025-04-30 15:20",
+        name: "Aminah N.",
+        phone: "+9607331122",
+        email: "aminah@example.com",
+        address: "Hulhumale'",
+        product: "Round Frame Set",
+        amount: 520,
+        status: "completed"
+      }
+    ];
+
+    function renderOrders() {
+      const tbody = document.getElementById("orderTable");
+      tbody.innerHTML = "";
+      const searchTerm = document.getElementById("searchInput").value.toLowerCase();
+
+      let totalMVR = 0;
+      let pendingCount = 0;
+      let count = 0;
+
+      orders.forEach(order => {
+        const match = [order.name, order.id, order.phone, order.email].some(field =>
+          field.toLowerCase().includes(searchTerm)
+        );
+
+        if (match) {
+          if (order.status === 'pending') pendingCount++;
+          count++;
+          totalMVR += order.amount;
+
+          const tr = document.createElement("tr");
+          tr.innerHTML = `
+            <td>${order.id}</td>
+            <td>${order.date}</td>
+            <td>${order.name}</td>
+            <td>
+              📞 ${order.phone}<br/>
+              📧 ${order.email}<br/>
+              📍 ${order.address}
+            </td>
+            <td>${order.product}</td>
+            <td>${order.amount}</td>
+            <td>
+              <button class="status-btn ${order.status}" onclick="toggleStatus('${order.id}')">
+                ${capitalize(order.status)}
+              </button>
+            </td>
+            <td>
+              <button class="copy-btn" onclick="copyId('${order.id}')">Copy ID</button>
+              <button class="delete-btn" onclick="deleteOrder('${order.id}')">Delete</button>
+            </td>
+          `;
+          tbody.appendChild(tr);
+        }
+      });
+
+      document.getElementById("totalOrders").textContent = count;
+      document.getElementById("totalMVR").textContent = totalMVR;
+      document.getElementById("pendingCount").textContent = pendingCount;
+    }
+
+    function toggleStatus(orderId) {
+      const order = orders.find(o => o.id === orderId);
+      if (order) {
+        order.status = order.status === "pending" ? "completed" : "pending";
+        renderOrders();
+      }
+    }
+
+    
+    function copyContact(value) {
+      navigator.clipboard.writeText(value);
+      alert("Copied: " + value);
+    }
+
+    function copyId(id) {
+      navigator.clipboard.writeText(id);
+      alert("Copied " + id);
+    }
+
+    function deleteOrder(orderId) {
+      if (confirm("Are you sure you want to delete this order?")) {
+        const index = orders.findIndex(o => o.id === orderId);
+        if (index > -1) {
+          orders.splice(index, 1);
+          renderOrders();
+        }
+      }
+    }
+
+    function capitalize(str) {
+      return str.charAt(0).toUpperCase() + str.slice(1);
+    }
+
+    document.getElementById("searchInput").addEventListener("input", renderOrders);
+    document.getElementById("monthName").textContent = new Date().toLocaleString('default', { month: 'long', year: 'numeric' });
+    renderOrders();
+  </script>
+</body>
+</html>
