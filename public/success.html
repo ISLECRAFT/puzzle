@@ -2,31 +2,30 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Order Confirmed</title>
-  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
-  <style>
-    body {
-      font-family: sans-serif;
-      background: #fffbe6;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      flex-direction: column;
-      min-height: 100vh;
-      text-align: center;
-      color: #4B3222;
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Order Success - EreYvi</title>
+<link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+<style>
+  body { background-color: #fffaec; font-family: sans-serif; color: #4B3222; }
+</style>
 </head>
-<body>
-  <h1 style="font-size: 2.5rem;">🎉 Thank you for your order!</h1>
-  <p>Your puzzle order has been received.</p>
-  <script>
-    confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
-    setTimeout(() => confetti(), 300);
-    setTimeout(() => confetti(), 600);
-  </script>
+<body class="flex flex-col items-center justify-center min-h-screen text-center space-y-6">
+<h1 class="text-4xl font-bold">🎉 Thank you for your Order!</h1>
+<p>Your Order ID: <span id="orderId" class="font-mono text-lg"></span></p>
+<button onclick="copyOrderId()" class="bg-[#4B3222] text-white px-4 py-2 rounded hover:opacity-90">Copy Order ID</button>
+
+<canvas id="confettiCanvas" style="position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;"></canvas>
+
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+<script>
+document.getElementById('orderId').textContent = 'ORD' + Math.floor(Math.random() * 1000000);
+function copyOrderId() {
+  const id = document.getElementById('orderId').textContent;
+  navigator.clipboard.writeText(id);
+  alert("Copied: " + id);
+}
+confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
+</script>
 </body>
 </html>
